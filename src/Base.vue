@@ -1,40 +1,33 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <v-card>
+      <v-navigation-drawer app permanent expand-on-hover>
+        <template v-slot:prepend>
+          <v-img class="ma-2" src="@/assets/logo2.png" />
+        </template>
+        <v-divider />
+        <v-list>
+          <v-list-item
+            v-for="item in DrawerItems"
+            :key="item.title"
+            :to="item.to"
+            link
+          >
+            <v-list-item-icon>
+              <v-icon v-text="item.icon" />
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+    </v-card>
 
     <v-main>
-      <router-view />
+      <v-container fluid>
+        <router-view />
+      </v-container>
     </v-main>
   </v-app>
 </template>
@@ -44,7 +37,11 @@ export default {
   name: "Base",
 
   data: () => ({
-    //
+    DrawerItems: [
+      { title: "Home", icon: "mdi-home", to: { name: "Home" } },
+      { title: "Single", icon: "mdi-account", to: "Single" },
+      { title: "VS CPU", icon: "mdi-head-snowflake", to: "Computer" }
+    ]
   })
 };
 </script>
