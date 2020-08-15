@@ -25,7 +25,7 @@
     </v-card>
 
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="mx-6">
         <router-view />
       </v-container>
     </v-main>

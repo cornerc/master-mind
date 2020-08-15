@@ -1,31 +1,29 @@
 <template>
   <div class="home">
-    <div class="ma-6">
+    <div class="my-6">
       <div class="text-h1">Hit & Blow</div>
       <div class="text-body-1">
-        0~9で構成された数字の列を得られるヒントを頼りに当てるゲームです
+        0~9で構成された数字の列をヒントを頼りに当てるゲームです
       </div>
     </div>
-    <div class="ma-6">
+    <div class="my-6">
       <div class="text-h3">基本ルール</div>
       <div class="text-body-1">
+        <div>プレイヤーはある数字の列を答えます</div>
+        <div>
+          出題側(CPU)はそれと正解の数字の列を比較してヒット数とブロー数を回答します
+        </div>
         <ul>
-          <li>プレイヤーはある数字の列を申告します</li>
-          <li>
-            出題側(CPU)はその数字の列に対してヒット数とブロー数を回答します
-            <ul>
-              <li>ヒット・・・数字も位置も合っている</li>
-              <li>ブロー・・・位置は違うが数字は使われている</li>
-            </ul>
-          </li>
-          <li>
-            これを繰り返して、プレイヤーが数字の列を完全に当てた時点でゲーム終了です
-          </li>
+          <li>ヒット・・・数字も位置も合っている</li>
+          <li>ブロー・・・位置は違うが数字は使われている</li>
         </ul>
+        <div>
+          これを繰り返して、プレイヤーが数字の列を完全に当てた時点でゲーム終了です
+        </div>
       </div>
     </div>
 
-    <div class="ma-6">
+    <div class="my-6">
       <div class="text-h3">遊び方</div>
       <div class="text-h5 my-3">
         <v-icon size="32">mdi-account</v-icon>一人で遊ぶ
@@ -43,7 +41,7 @@
         <div>コンピュータより先に決めた数字の列を当てたらゲームクリアです</div>
       </div>
       <div class="text-body-1 my-3">
-        ノーマルモード・・・ほとんど当てずっぽうとはいえ無駄なことはしないのでまあまあ強いです
+        ノーマルモード・・・当てずっぽうとはいえ無駄なことはしないのでまあまあ強いです
       </div>
       <div class="text-body-1 my-3">
         鬼モード・・・ノーマルモードの２倍強いです
