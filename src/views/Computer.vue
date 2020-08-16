@@ -211,6 +211,8 @@
                   <thead>
                     <tr>
                       <th>
+                        <v-icon v-if="level == 1">mdi-emoticon-poop</v-icon>
+                        <v-icon v-else>mdi-emoticon-devil</v-icon>
                         CPU
                         <v-progress-circular
                           class="mx-2"
@@ -297,6 +299,7 @@ export default {
     },
     checkYourNumber() {
       return [
+        v => Number.isInteger(v) || "数字を入力してください",
         v => v.toString().length <= this.digit || "桁数が設定を超えています",
         v =>
           this.duplicated ||
