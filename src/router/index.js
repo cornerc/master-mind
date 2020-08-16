@@ -18,7 +18,11 @@ const routes = [
   {
     path: "/computer",
     name: "Computer",
-    component: () => import("@/views/Single.vue")
+    component: () => import("@/views/Computer.vue")
+  },
+  {
+    path: "*",
+    redirect: { name: "Home" }
   }
 ];
 

@@ -1,9 +1,17 @@
 <template>
   <v-app>
     <v-card>
-      <v-navigation-drawer app permanent expand-on-hover>
-        <template v-slot:prepend>
+      <v-navigation-drawer
+        app
+        permanent
+        expand-on-hover
+        :style="{ 'z-index': 300 }"
+      >
+        <template v-slot:append>
           <v-img class="ma-2" src="@/assets/logo2.png" />
+          <v-list-item-icon>
+            <v-icon @click="linkToGitHub">mdi-github</v-icon>
+          </v-list-item-icon>
         </template>
         <v-divider />
         <v-list>
@@ -42,6 +50,11 @@ export default {
       { title: "Single", icon: "mdi-account", to: "Single" },
       { title: "VS CPU", icon: "mdi-head-snowflake", to: "Computer" }
     ]
-  })
+  }),
+  methods: {
+    linkToGitHub() {
+      window.open("https://github.com/cornercrap/master-mind", "_blank");
+    }
+  }
 };
 </script>

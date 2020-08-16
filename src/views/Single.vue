@@ -14,17 +14,17 @@
         <v-card-title>桁数</v-card-title>
         <v-card-actions class="px-6">
           <v-btn-toggle v-model="digit" mandatory>
-            <v-btn value="3"><v-icon>mdi-numeric-3</v-icon></v-btn>
-            <v-btn value="4"><v-icon>mdi-numeric-4</v-icon></v-btn>
-            <v-btn value="5"><v-icon>mdi-numeric-5</v-icon></v-btn>
-            <v-btn value="6"><v-icon>mdi-numeric-6</v-icon></v-btn>
+            <v-btn :value="3"><v-icon>mdi-numeric-3</v-icon></v-btn>
+            <v-btn :value="4"><v-icon>mdi-numeric-4</v-icon></v-btn>
+            <v-btn :value="5"><v-icon>mdi-numeric-5</v-icon></v-btn>
+            <v-btn :value="6"><v-icon>mdi-numeric-6</v-icon></v-btn>
           </v-btn-toggle>
         </v-card-actions>
         <v-card-title>重複</v-card-title>
         <v-card-actions class="px-6">
           <v-btn-toggle v-model="duplicated" mandatory>
-            <v-btn class="font-weight-bold">なし</v-btn>
-            <v-btn class="font-weight-bold">あり</v-btn>
+            <v-btn :value="false" class="font-weight-bold">なし</v-btn>
+            <v-btn :value="true" class="font-weight-bold">あり</v-btn>
           </v-btn-toggle>
         </v-card-actions>
         <v-divider />
@@ -47,13 +47,13 @@
                 v-for="(v, i) in answer"
                 :key="i"
                 class="mx-1"
-                :color="isSelected(i) ? 'primary' : ''"
+                :color="i == selectedIdx ? 'primary' : ''"
                 :large="isLarge"
                 :x-small="!isLarge"
                 :height="computedHeight"
-                @click="selectIdx(i)"
+                @click="selectedIdx = i"
               >
-                <v-icon large>mdi-numeric-{{ v }}</v-icon>
+                <v-icon :large="isLarge">mdi-numeric-{{ v }}</v-icon>
               </v-btn>
             </v-sheet>
             <v-sheet
@@ -170,12 +170,12 @@ export default {
     answer: [],
     field: undefined,
     dialog: true,
-    digit: "4",
-    duplicated: 0
+    digit: 3,
+    duplicated: false
   }),
   computed: {
     isLarge() {
-      return parseInt(this.digit) < 5;
+      return this.digit < 5;
     },
     computedHeight() {
       return this.isLarge ? 78 : 53.75;
@@ -185,10 +185,10 @@ export default {
     start() {
       this.dialog = false;
       this.field = new Field(
-        this.genRandomValue(parseInt(this.digit), this.duplicated),
+        this.genRandomValue(this.digit, this.duplicated),
         this.digit
       );
-      this.answer = [...Array(parseInt(this.digit)).keys()];
+      this.answer = [...Array(this.digit).keys()];
     },
     genRandomValue(digit, duplicated) {
       let result = "";
@@ -199,12 +199,6 @@ export default {
         if (!duplicated) nums.splice(index, 1);
       }
       return parseInt(result);
-    },
-    isSelected(index) {
-      return index === this.selectedIdx;
-    },
-    selectIdx(index) {
-      this.selectedIdx = index;
     },
     changeValue(value) {
       if (this.isGameOver) return;
@@ -217,7 +211,7 @@ export default {
     clearValue() {
       if (this.isGameOver) return;
       let answer = this.answer.concat();
-      for (let i = 0; i < parseInt(this.digit); i++) {
+      for (let i = 0; i < this.digit; i++) {
         answer[i] = 0;
       }
       this.answer = answer;
@@ -227,12 +221,12 @@ export default {
       const answer = this.answer.join("");
       const res = this.field.answer(new Field(answer, this.digit));
       this.historys.push({
-        answer: this.answer,
+        answer: answer,
         hit: res.hit,
         blow: res.blow
       });
 
-      if (parseInt(this.digit) === res.hit) {
+      if (this.digit === res.hit) {
         this.gameOver();
       }
     },

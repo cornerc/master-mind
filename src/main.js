@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Base from "@/Base.vue";
+import Base from "@/views/Base.vue";
 import router from "@/router";
 import vuetify from "@/plugins/vuetify";
 
