@@ -16,7 +16,7 @@
         <v-card-title class="headline">設定</v-card-title>
         <v-card-title>桁数</v-card-title>
         <v-card-actions class="px-6">
-          <v-btn-toggle v-model="digit" mandatory>
+          <v-btn-toggle v-model="digit" mandatory @change="runValid">
             <v-btn :value="3"><v-icon>mdi-numeric-3</v-icon></v-btn>
             <v-btn :value="4"><v-icon>mdi-numeric-4</v-icon></v-btn>
             <v-btn :value="5"><v-icon>mdi-numeric-5</v-icon></v-btn>
@@ -25,7 +25,7 @@
         </v-card-actions>
         <v-card-title>重複</v-card-title>
         <v-card-actions class="px-6">
-          <v-btn-toggle v-model="duplicated" mandatory>
+          <v-btn-toggle v-model="duplicated" mandatory @change="runValid">
             <v-btn :value="false" class="font-weight-bold">なし</v-btn>
             <v-btn :value="true" class="font-weight-bold">あり</v-btn>
           </v-btn-toggle>
@@ -40,7 +40,7 @@
         <v-card-title>
           あなたの数字(桁数が設定より少ないとゼロ埋めされます)
         </v-card-title>
-        <v-form v-model="valid">
+        <v-form v-model="valid" ref="form">
           <v-card-actions class="px-6">
             <v-text-field
               v-model.number="yourNumber"
@@ -180,7 +180,7 @@
                           </span>
                         </template>
                         <template v-else>
-                          <span v-for="(_, idx) of digit" :key="idx">
+                          <span v-for="(_, idx) of digit" :key="idx + 'sec'">
                             <v-icon color="primary">
                               mdi-help-circle-outline
                             </v-icon>
@@ -210,7 +210,16 @@
                 <template #default>
                   <thead>
                     <tr>
-                      <th>CPU</th>
+                      <th>
+                        CPU
+                        <v-progress-circular
+                          class="mx-2"
+                          :indeterminate="isCpuConsider"
+                          size="24"
+                          color="primary"
+                        >
+                        </v-progress-circular>
+                      </th>
                       <th>H</th>
                       <th>B</th>
                     </tr>
@@ -218,9 +227,14 @@
                   <tbody>
                     <tr>
                       <td>
-                        <span v-for="i of yourNumber.toString()" :key="i">
-                          <v-icon color="primary">mdi-numeric-{{ i }}</v-icon>
-                        </span>
+                        <template v-if="yourField !== undefined">
+                          <span
+                            v-for="(i, idx) of yourField.get().join('')"
+                            :key="idx + 'yournumber'"
+                          >
+                            <v-icon color="primary">mdi-numeric-{{ i }}</v-icon>
+                          </span>
+                        </template>
                       </td>
                       <td>-</td>
                       <td>-</td>
@@ -258,8 +272,10 @@ export default {
   data: () => ({
     valid: true,
     yourNumber: 1234,
+    yourField: undefined,
     isGameOver: false,
     isWin: false,
+    isCpuConsider: false,
     historys: [],
     historysOfCpu: [],
     selectedIdx: 0,
@@ -296,6 +312,7 @@ export default {
         this.genRandomValue(this.digit, this.duplicated),
         this.digit
       );
+      this.yourField = new Field(this.yourNumber, this.digit);
       this.bot = new MasterMindBot(
         this.yourNumber,
         this.digit,
@@ -315,7 +332,7 @@ export default {
       return parseInt(result);
     },
     changeValue(value) {
-      if (this.isGameOver || this.isDisabled) return;
+      if (this.isGameOver || this.isCpuConsider) return;
       this.answer[this.selectedIdx] = value;
       this.selectedIdx = this.selectedIdx + 1;
       if (this.answer.length === this.selectedIdx) {
@@ -323,7 +340,7 @@ export default {
       }
     },
     clearValue() {
-      if (this.isGameOver || this.isDisabled) return;
+      if (this.isGameOver || this.isCpuConsider) return;
       let answer = this.answer.concat();
       for (let i = 0; i < this.digit; i++) {
         answer[i] = 0;
@@ -331,8 +348,8 @@ export default {
       this.answer = answer;
     },
     async checkValue() {
-      if (this.isGameOver || this.isDisabled) return;
-      this.isDisabled = true;
+      if (this.isGameOver || this.isCpuConsider) return;
+      this.isCpuConsider = true;
       const answer = this.answer.join("");
       const res = this.field.answer(new Field(answer, this.digit));
       this.historys.push({
@@ -356,7 +373,7 @@ export default {
         if (this.digit === cpuRes.answer.hit) {
           this.gameOver(false);
         }
-        this.isDisabled = false;
+        this.isCpuConsider = false;
       }, 500);
     },
     gameOver(isWin) {
@@ -370,8 +387,10 @@ export default {
     },
     reload() {
       this.yourNumber = 1234;
+      this.yourField = undefined;
       this.isWin = false;
       this.isGameOver = false;
+      this.isCpuConsider = false;
       this.historys = [];
       this.historysOfCpu = [];
       this.selectedIdx = 0;
@@ -380,6 +399,9 @@ export default {
       this.bot = undefined;
       this.dialog = true;
       this.snackbarText = "";
+    },
+    runValid() {
+      this.$refs.form.validate();
     }
   }
 };
